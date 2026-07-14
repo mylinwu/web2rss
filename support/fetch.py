@@ -9,12 +9,14 @@ logger = logging.getLogger(__name__)
 
 
 headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/\
-    537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36',
+    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36',
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,\
     image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;\
     v=b3;q=0.7",
-    "Connection": "keep-alive"
+    "Connection": "keep-alive",
+    "sec-ch-ua": '"Chromium";v="134", "Not:A-Brand";v="24", "Google Chrome";v="134"',
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": '"Linux"'
 }
 
 _charsets = ['GB', 'UTF', 'ISO']

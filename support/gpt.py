@@ -27,6 +27,7 @@ def gen_code(url):
 def _chat(messages, api_url='', api_key=''):
 
     key = api_key or get_item('gpt_api_key')
+    chat_model = get_item('gpt_model') or "gpt-4o-mini"
     # 请求头信息，包含 API 密钥和内容类型
     headers = {
         'Content-Type': 'application/json',
@@ -35,7 +36,7 @@ def _chat(messages, api_url='', api_key=''):
 
     # GPT 模型的请求数据
     data = {
-        "model": "gpt-4o-mini",  # 模型引擎，也可以选择 gpt-4
+        "model": chat_model,  # 模型引擎，也可以选择 gpt-4
         "messages": messages,  # 输入的提示信息
         "max_tokens": 2000,  # 返回的最大字数
         "temperature": 0.7  # 文本生成的随机性
