@@ -51,8 +51,8 @@ class Route:
 class Router:
     def __init__(self, routes, router_file_path='router.txt'):
         self.routes = routes
-        self._remote_url = get_item('remote_url')
-        self._local_repo_path = get_item('local_repo_path')
+        self._remote_url = get_item('REMOTE_URL')
+        self._local_repo_path = get_item('LOCAL_REPO_PATH')
         self._router_file_path = router_file_path
         logger.info(f"init {router_file_path} routes: {routes.keys()}")
 
@@ -176,7 +176,7 @@ _remote_router_cache = None
 def _get_remote_router():
     global _remote_router_cache
     if _remote_router_cache is None:
-        url = get_item('remote_url')+'/router.txt'
+        url = get_item('REMOTE_URL')+'/router.txt'
         # print(url)
         remote_routes_file = fetch(url, 'text')
         # print(remote_routes_file)

@@ -24,7 +24,7 @@ _charsets = ['GB', 'UTF', 'ISO']
 
 def fetch(url, type='soup'):
     url = unquote(url)
-    proxy_url = get_item('proxy_url')
+    proxy_url = get_item('PROXY_URL')
     try:
         logger.debug(f'fetch url: {url}')
         response = requests.get(url, headers=headers, timeout=30000)

@@ -26,8 +26,8 @@ def gen_code(url):
 
 def _chat(messages, api_url='', api_key=''):
 
-    key = api_key or get_item('gpt_api_key')
-    chat_model = get_item('gpt_model') or "gpt-4o-mini"
+    key = api_key or get_item('GPT_API_KEY')
+    chat_model = get_item('GPT_MODEL') or "gpt-4o-mini"
     # 请求头信息，包含 API 密钥和内容类型
     headers = {
         'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ def _chat(messages, api_url='', api_key=''):
     }
 
     # OpenAI API 的 URL
-    url = api_url or get_item('gpt_api_url')
+    url = api_url or get_item('GPT_API_URL')
     # 发送 POST 请求
     response = requests.post(url, headers=headers, data=json.dumps(data))
 

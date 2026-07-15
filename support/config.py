@@ -1,12 +1,13 @@
-config = {}
+import os
+from dotenv import load_dotenv
+
+# Load .env file into environment variables
+load_dotenv()
 
 
-def init_cofig(config_file_path='config.txt'):
-    with open(config_file_path, 'r') as file:
-        for line in file:
-            key, value = line.strip().split('=', 1)
-            config[key] = value
+def init_cofig():
+    pass
 
 
-def get_item(key):
-    return config[key]
+def get_item(key, default=None):
+    return os.getenv(key, default)

@@ -6,3 +6,4 @@ flask
 cachetools
 lxml_html_clean
 readability-lxml
+python-dotenv
