@@ -25,8 +25,9 @@ def gen_code(url):
 
 
 def _chat(messages, api_url='', api_key=''):
-
     key = api_key or get_item('GPT_API_KEY')
+    if not key:
+        raise RuntimeError("GPT_API_KEY 未配置，请在 Railway 环境变量中设置")
     chat_model = get_item('GPT_MODEL') or "gpt-4o-mini"
     # 请求头信息，包含 API 密钥和内容类型
     headers = {
@@ -45,19 +46,38 @@ def _chat(messages, api_url='', api_key=''):
     # OpenAI API 的 URL
     url = api_url or get_item('GPT_API_URL')
     # 发送 POST 请求
-    response = requests.post(url, headers=headers, data=json.dumps(data))
+    try:
+        response = requests.post(url, headers=headers,
+                                 data=json.dumps(data), timeout=60)
+    except requests.exceptions.Timeout:
+        raise RuntimeError("AI 服务请求超时，请检查网络或稍后重试")
+    except requests.exceptions.RequestException as e:
+        raise RuntimeError(f"AI 服务连接失败: {str(e)}")
 
     # 检查请求是否成功
     if response.status_code == 200:
-        # print(response.json())
-        # 提取 GPT 生成的文本
-        gpt_response = response.json()['choices'][0]['message']['content']\
-            .strip()
-        return gpt_response
+        try:
+            resp_json = response.json()
+            choices = resp_json.get('choices', [])
+            if choices:
+                msg = choices[0].get('message', {})
+                content = msg.get('content', '')
+                if content:
+                    return content.strip()
+            # 兼容部分第三方 API 直接返回 text 字段
+            if 'text' in resp_json:
+                return resp_json['text'].strip()
+            # 无法解析时返回完整响应以便排查
+            print(f"AI 响应格式异常: {resp_json}")
+            raise RuntimeError(f"AI 响应格式异常: {resp_json}")
+        except (ValueError, KeyError, IndexError) as e:
+            print(f"解析 AI 响应失败: {str(e)}, 原始响应: {response.text[:500]}")
+            raise RuntimeError(f"解析 AI 响应失败: {str(e)}")
     else:
-        print(f"请求失败，状态码: {response.status_code}")
-        print("响应内容:", response.text)
-        raise RuntimeError(response.text)
+        print(f"AI 请求失败，状态码: {response.status_code}")
+        print("响应内容:", response.text[:500])
+        raise RuntimeError(f"AI 服务返回错误 (HTTP {response.status_code}): "
+                           f"{response.text[:200]}")
 
 
 def __gen_prompts(html, url):
