@@ -49,11 +49,18 @@ def json_example():
 @app.route('/chat', methods=['POST'])
 def chat():
     data = request.get_json()
-    if 'messages' in data and len(data['messages']):
-        return jsonify(gen_code_chat(data['messages']))
-    if 'url' in data:
-        d = gen_code(data['url'])
-        return jsonify(d)
+    try:
+        if 'messages' in data and len(data['messages']):
+            return jsonify(gen_code_chat(data['messages']))
+        if 'url' in data:
+            d = gen_code(data['url'])
+            return jsonify(d)
+        return jsonify({'error': '无效请求，需要 messages 或 url'}), 400
+    except RuntimeError as e:
+        return jsonify({'error': str(e)}), 502
+    except Exception as e:
+        logging.exception("chat 接口异常")
+        return jsonify({'error': f'服务器内部错误: {str(e)}'}), 500
 
 
 @app.route('/call', methods=['POST'])
