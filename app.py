@@ -133,4 +133,6 @@ if __name__ == '__main__':
                         format='%(asctime)s - %(levelname)s - %(message)s')
     init_cofig()
     router = init_router()
-    app.run(host='0.0.0.0', port=3390)
+    import os
+    port = int(os.environ.get('PORT', 3390))
+    app.run(host='0.0.0.0', port=port)
